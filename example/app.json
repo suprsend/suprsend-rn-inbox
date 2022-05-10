@@ -1,0 +1,22 @@
+{
+  "name": "@suprsend/rn-inbox-example",
+  "displayName": "RnInbox Example",
+  "expo": {
+    "name": "@suprsend/rn-inbox-example",
+    "slug": "suprsend-rn-inbox-example",
+    "description": "Example app for @suprsend/rn-inbox",
+    "privacy": "public",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
