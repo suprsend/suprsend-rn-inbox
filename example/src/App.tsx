@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import Inbox, { ToastManager } from '@suprsend/rn-inbox';
 
 export default function App() {
   return (
-    <View>
+    <View style={{ alignItems: 'flex-end' }}>
       <ToastManager />
       <Inbox />
     </View>

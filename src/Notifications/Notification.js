@@ -2,44 +2,48 @@ import React, { useState } from 'react';
 import { Pressable, Image } from 'react-native';
 import styled from '@emotion/native';
 import { Popover } from 'react-native-popper';
+import {
+  HeadingText,
+  SubHeadingText,
+  HelperText,
+  ColorConfig,
+} from '../utils/styles';
 
 const Container = styled.View`
   padding: 7px 14px;
   border-radius: 5px;
   border-bottom-width: 1px;
-  border-bottom-color: #f0f0f0;
+  border-bottom-color: ${ColorConfig.lightGray2}; ;
 `;
 
 const InnerView = styled.View`
-  align-items: center;
+  align-items: flex-start;
   flex-direction: row;
   justify-content: space-between;
 `;
 
 const TopView = styled.View`
-  margin-right: 15px;
   flex: 1;
+  margin-right: 15px;
 `;
 
-const HeaderText = styled.Text`
-  font-size: 16px;
+const HeaderText = styled(HeadingText)`
   margin: 5px 0px;
 `;
 
-const BodyText = styled.Text`
-  font-size: 14px;
+const BodyText = styled(SubHeadingText)`
   margin: 5px 0px;
 `;
 
 const Button = styled.TouchableOpacity`
-  background-color: #358adf;
+  background-color: ${ColorConfig.secondary};
   border-radius: 5px;
   margin: 10px 0px;
+  padding: 2px 0px;
 `;
 
-const ButtonText = styled.Text`
-  color: #fff;
-  font-size: 14px;
+const ButtonText = styled(SubHeadingText)`
+  color: ${ColorConfig.white};
   padding: 1px 0px;
   text-align: center;
 `;
@@ -47,39 +51,30 @@ const ButtonText = styled.Text`
 const BottomView = styled.View`
   align-items: center;
   flex-direction: row;
+  margin-top: 14px;
 `;
 
 const Dot = styled.View`
-  margin-left: 10px;
-  background: #358adf;
-  border-radius: 50px;
   width: 6px;
   height: 6px;
+  background: ${ColorConfig.secondary};
+  margin-left: 10px;
+  border-radius: 50px;
 `;
 
 const UnReadView = styled.Pressable`
   position: relative;
 `;
 
-const MenuItemText = styled.Text`
-  font-size: 12px;
+const MenuItemText = styled(HelperText)`
   padding: 12px;
-  width: 100%;
-  margin: 0px;
+  color: ${ColorConfig.primary};
 `;
 
 const MenuBox = styled.View`
-  background-color: #fff;
-  border: 1px solid #f0f0f0;
+  background-color: ${ColorConfig.white};
+  elevation: 10;
   border-radius: 5px;
-  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2),
-    0px 6px 20px 0px rgba(0, 0, 0, 0.19);
-`;
-
-const TimeText = styled.Text`
-  font-size: 12px;
-  margin: 0px;
-  color: #2c394b;
 `;
 
 export default function Notification({ notificationData, isRead = true }) {
@@ -133,7 +128,7 @@ export default function Notification({ notificationData, isRead = true }) {
           )}
         </BottomView>
       </InnerView>
-      <TimeText>Yesterday at 2:35pm</TimeText>
+      <HelperText>Yesterday at 2:35pm</HelperText>
     </Container>
   );
 }

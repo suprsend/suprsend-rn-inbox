@@ -1,17 +1,21 @@
 import React from 'react';
 import styled from '@emotion/native';
+import { HelperText } from '../utils/styles';
 
 const Container = styled.View`
-  font-size: 10px;
   position: absolute;
-  padding: 3px 6px;
-  background-color: gray;
-  text-align: center;
+  top: 0px;
+  right: 2px;
+  padding: 2px 6px;
+  background-color: red;
   border-radius: 50px;
+  z-index: 999;
 `;
 
-const CountText = styled.Text`
-  color: white;
+const CountText = styled(HelperText)`
+  font-size: 10px;
+  color: #000;
+  line-height: 12px;
 `;
 
 export default function Badge({ count, badgeComponent, ...otherProps }) {

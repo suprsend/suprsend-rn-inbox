@@ -1,12 +1,12 @@
 import React from 'react';
-import { Dimensions } from 'react-native';
 import styled from '@emotion/native';
 import NotificationList from '../Notifications/NotificationList';
 import Header from './Header';
+import { Dimensions } from 'react-native';
 
 const NotificationContainerView = styled.View`
   min-height: 100px;
-  max-height: 500px;
+  max-height: 400px;
   border-radius: 5px;
   background-color: #fff;
   border: 1px solid #f0f0f0;
@@ -15,13 +15,11 @@ const NotificationContainerView = styled.View`
   padding-top: 50px;
 `;
 
-export default function NotificationContainer({ headerProps }) {
+export default function NotificationContainer({}) {
   return (
     <NotificationContainerView
-      style={{
-        width: Dimensions.get('screen').width - 25,
-      }}
       elevation={10}
+      style={{ width: Dimensions.get('screen').width }}
     >
       <Header />
       <NotificationList />

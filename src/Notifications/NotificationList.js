@@ -73,7 +73,7 @@ export default function NotificationsList() {
   return (
     <FlatList
       data={notificationData}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => {
         return <ClickableNotification notificationData={item} key={item.id} />;
       }}

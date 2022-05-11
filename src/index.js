@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import { StyleSheet } from 'react-native';
 import styled from '@emotion/native';
 import { Popover } from 'react-native-popper';
 import Bell from './Bell';
 import Badge from './Badge';
 import NotificationContainer from './NotificationContainer';
 export { default as ToastManager } from './Toast';
-import { Toast } from './Toast';
 
 const count = 5;
 
@@ -15,7 +15,10 @@ const Container = styled.View`
   margin-left: 20px;
 `;
 
-const MainIcon = styled.TouchableOpacity``;
+const MainIcon = styled.TouchableOpacity`
+  position: relative;
+  padding: 10px 10px 0px 0px;
+`;
 
 export default function SuprsendInbox({ children }) {
   const [isOpen, toggleOpen] = useState(false);
@@ -40,17 +43,19 @@ export default function SuprsendInbox({ children }) {
       >
         <Popover.Backdrop />
         <Popover.Content>
-          <Popover.Arrow
-            style={{
-              backgroundColor: 'white',
-              borderColor: '#fff',
-              elevation: 10,
-              zIndex: 10,
-            }}
-          />
+          <Popover.Arrow style={styles.arrow} />
           <NotificationBox />
         </Popover.Content>
       </Popover>
     </Container>
   );
 }
+
+const styles = StyleSheet.create({
+  arrow: {
+    backgroundColor: 'white',
+    borderColor: '#fff',
+    elevation: 10,
+    zIndex: 10,
+  },
+});
