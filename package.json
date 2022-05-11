@@ -37,7 +37,7 @@
     "android"
   ],
   "repository": "https://github.com/suprsend/suprsend-rn-inbox",
-  "author": "SuprSend Developers <katta.sivaram@suprsend.com> (https://github.com/suprsend)",
+  "author": "SuprSend Developers (https://github.com/suprsend)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/suprsend/suprsend-rn-inbox/issues"
@@ -51,8 +51,8 @@
     "@react-native-community/eslint-config": "^2.0.0",
     "@release-it/conventional-changelog": "^2.0.0",
     "@types/jest": "^26.0.0",
-    "@types/react": "^16.9.19",
-    "@types/react-native": "0.62.13",
+    "@types/react": "^16.14.26",
+    "@types/react-native": "^0.62.13",
     "commitlint": "^11.0.0",
     "eslint": "^7.2.0",
     "eslint-config-prettier": "^7.0.0",
@@ -143,5 +143,12 @@
         }
       ]
     ]
+  },
+  "dependencies": {
+    "@emotion/native": "^11.0.0",
+    "@emotion/react": "^11.9.0",
+    "react-native-modal": "^13.0.1",
+    "react-native-popper": "^0.3.2",
+    "react-native-responsive-fontsize": "^0.5.1"
   }
 }
