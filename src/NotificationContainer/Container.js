@@ -1,8 +1,8 @@
 import React from 'react';
+import { Dimensions, StyleSheet } from 'react-native';
 import styled from '@emotion/native';
 import NotificationList from '../Notifications/NotificationList';
 import Header from './Header';
-import { Dimensions } from 'react-native';
 
 const NotificationContainerView = styled.View`
   min-height: 100px;
@@ -13,16 +13,24 @@ const NotificationContainerView = styled.View`
   position: relative;
   border-radius: 5px;
   padding-top: 50px;
+  shadow-color: #000;
+  shadow-offset: 0px 2px;
+  shadow-opacity: 0.3;
+  shadow-radius: 4px
+  elevation: 8;
 `;
 
 export default function NotificationContainer({}) {
   return (
-    <NotificationContainerView
-      elevation={10}
-      style={{ width: Dimensions.get('screen').width }}
-    >
+    <NotificationContainerView style={styles.container}>
       <Header />
       <NotificationList />
     </NotificationContainerView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    width: Dimensions.get('screen').width,
+  },
+});

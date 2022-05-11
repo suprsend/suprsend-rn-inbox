@@ -60,7 +60,7 @@ const Dot = styled.View`
   border-radius: 50px;
 `;
 
-export default function Notification({ notificationData, isRead = true }) {
+export default function Notification({ notificationData, isRead = false }) {
   return (
     <Container>
       <InnerView>

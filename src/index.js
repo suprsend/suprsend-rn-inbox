@@ -11,13 +11,12 @@ const count = 5;
 
 const Container = styled.View`
   position: relative;
-  margin-top: 50px;
-  margin-left: 20px;
 `;
 
 const MainIcon = styled.TouchableOpacity`
   position: relative;
   padding: 10px 10px 0px 0px;
+  width: 30px;
 `;
 
 export default function SuprsendInbox({ children }) {
@@ -55,7 +54,18 @@ const styles = StyleSheet.create({
   arrow: {
     backgroundColor: 'white',
     borderColor: '#fff',
-    elevation: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.6,
+    shadowRadius: 0.1,
+    elevation: 8,
     zIndex: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
+    borderLeftWidth: 1,
+    borderLeftColor: '#f0f0f0',
   },
 });

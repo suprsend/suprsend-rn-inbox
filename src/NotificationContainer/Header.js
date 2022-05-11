@@ -14,7 +14,8 @@ const HeaderContainer = styled.View`
   z-index: 1000;
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
-  elevation: 2;
+  border-bottom-width: 1px;
+  border-bottom-color: #f0f0f0;
 `;
 
 export default function Header() {
