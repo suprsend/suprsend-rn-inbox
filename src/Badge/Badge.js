@@ -14,7 +14,7 @@ const Container = styled.View`
 
 const CountText = styled(HelperText)`
   font-size: 10px;
-  color: #000;
+  color: #fff;
   line-height: 12px;
 `;
 

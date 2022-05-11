@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
-import { Pressable, Image } from 'react-native';
+import React from 'react';
 import styled from '@emotion/native';
-import { Popover } from 'react-native-popper';
 import {
   HeadingText,
   SubHeadingText,
@@ -62,23 +60,7 @@ const Dot = styled.View`
   border-radius: 50px;
 `;
 
-const UnReadView = styled.Pressable`
-  position: relative;
-`;
-
-const MenuItemText = styled(HelperText)`
-  padding: 12px;
-  color: ${ColorConfig.primary};
-`;
-
-const MenuBox = styled.View`
-  background-color: ${ColorConfig.white};
-  elevation: 10;
-  border-radius: 5px;
-`;
-
 export default function Notification({ notificationData, isRead = true }) {
-  const [openMenu, toggleMenu] = useState(false);
   return (
     <Container>
       <InnerView>
@@ -96,37 +78,7 @@ export default function Notification({ notificationData, isRead = true }) {
             </Button>
           )}
         </TopView>
-        <BottomView>
-          {!isRead ? (
-            <Dot />
-          ) : (
-            <UnReadView>
-              <Popover
-                animationEntryDuration={0}
-                animationExitDuration={0}
-                isOpen={openMenu}
-                onOpenChange={toggleMenu}
-                placement="left top"
-                trigger={
-                  <Pressable>
-                    <Image source={require('./MenuIcon.png')} />
-                  </Pressable>
-                }
-              >
-                <Popover.Backdrop />
-                <Popover.Content>
-                  <MenuBox
-                    onPress={() => {
-                      toggleMenu((prev) => !prev);
-                    }}
-                  >
-                    <MenuItemText>UnRead</MenuItemText>
-                  </MenuBox>
-                </Popover.Content>
-              </Popover>
-            </UnReadView>
-          )}
-        </BottomView>
+        <BottomView>{!isRead ? <Dot /> : null}</BottomView>
       </InnerView>
       <HelperText>Yesterday at 2:35pm</HelperText>
     </Container>
