@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import Inbox, { ToastManager } from '@suprsend/rn-inbox';
+import Inbox, { Toast } from '@suprsend/rn-inbox';
 
 export default function App() {
+  const myRef = React.useRef();
   return (
     <View>
-      <ToastManager />
-      <Inbox />
+      <Toast ref={myRef} />
+      <View style={{ marginTop: 50 }}>
+        <Inbox notify={myRef} />
+      </View>
     </View>
   );
 }

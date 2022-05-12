@@ -147,7 +147,6 @@
   "dependencies": {
     "@emotion/native": "^11.0.0",
     "@emotion/react": "^11.9.0",
-    "react-native-modal": "^13.0.1",
     "react-native-popper": "^0.3.2",
     "react-native-responsive-fontsize": "^0.5.1"
   }

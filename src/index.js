@@ -5,7 +5,7 @@ import { Popover } from 'react-native-popper';
 import Bell from './Bell';
 import Badge from './Badge';
 import NotificationContainer from './NotificationContainer';
-export { default as ToastManager } from './Toast';
+export { default as Toast } from './Toast';
 
 const count = 5;
 
@@ -19,7 +19,7 @@ const MainIcon = styled.TouchableOpacity`
   width: 30px;
 `;
 
-export default function SuprsendInbox({ children }) {
+export default function SuprsendInbox({ children, notify }) {
   const [isOpen, toggleOpen] = useState(false);
 
   const NotificationBox = children ? children : NotificationContainer;
