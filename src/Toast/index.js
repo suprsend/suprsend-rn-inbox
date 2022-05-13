@@ -42,13 +42,18 @@ class ToastManager extends Component {
     }
   }
 
-  close() {
+  close(forceClose = false) {
     if (!this.isShow && !this.state.isShow) return;
     this.resetAll();
-    this.timer = setTimeout(() => {
+    if (!forceClose) {
+      this.timer = setTimeout(() => {
+        this.setState({ isShow: false });
+        this.isShow = false;
+      }, this.props.duration);
+    } else {
       this.setState({ isShow: false });
       this.isShow = false;
-    }, this.props.duration);
+    }
   }
 
   position() {

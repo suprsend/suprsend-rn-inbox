@@ -34,7 +34,7 @@ export function ToastNotification({ notificationData, otherData }) {
                 notifications: otherData.storeNotificationData.notifications,
                 last_fetched: otherData.storeNotificationData.last_fetched,
               });
-              // close toast
+              otherData.notify.current.close(true);
             })
             .catch((err) => {
               console.log('ERROR', err);
@@ -76,7 +76,7 @@ export function ManyNotificationsToast({ notificationCount, otherData }) {
     <ClickableNotification
       onPress={() => {
         otherData.toggleOpen(true);
-        // close toast
+        otherData.notify.current.close(true);
       }}
     >
       <MultipleToastContainer>{`You have ${notificationCount} new notifications`}</MultipleToastContainer>
