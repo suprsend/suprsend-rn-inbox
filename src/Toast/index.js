@@ -1,36 +1,9 @@
 import React, { Component } from 'react';
 import { View, Dimensions, StyleSheet } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import styled from '@emotion/native';
-import { HeadingText, SubHeadingText, ColorConfig } from '../utils/styles';
+import { ToastNotification, ManyNotificationsToast } from './ToastNotification';
 
 const { height } = Dimensions.get('window');
-
-const Container = styled.View`
-  padding: 7px 14px;
-  border-radius: 5px;
-`;
-
-const HeaderText = styled(HeadingText)`
-  margin: 5px 0px;
-`;
-
-const BodyText = styled(SubHeadingText)`
-  margin: 5px 0px;
-`;
-
-const Button = styled.TouchableOpacity`
-  background-color: ${ColorConfig.secondary};
-  border-radius: 5px;
-  margin: 10px 0px;
-  padding: 2px 0px;
-`;
-
-const ButtonText = styled(SubHeadingText)`
-  color: ${ColorConfig.white};
-  padding: 1px 0px;
-  text-align: center;
-`;
 
 class ToastManager extends Component {
   constructor(props) {
@@ -40,10 +13,28 @@ class ToastManager extends Component {
     };
   }
 
-  show(notificationData) {
+  show({
+    notificationData,
+    notificationCount,
+    storeNotificationData,
+    workspaceKey,
+    distinctId,
+    setNotificationData,
+    notify,
+    toggleOpen,
+  }) {
     this.setState({
       isShow: true,
       notificationData,
+      notificationCount,
+      otherData: {
+        workspaceKey,
+        distinctId,
+        setNotificationData,
+        storeNotificationData,
+        notify,
+        toggleOpen,
+      },
     });
     this.isShow = true;
     if (this.props.duration !== this.props.end) {
@@ -72,13 +63,15 @@ class ToastManager extends Component {
 
   render() {
     if (this.state.isShow) {
+      const { notificationData, notificationCount, otherData } = this.state;
+
       return (
         <View
           style={[
             styles.mainContainer,
             {
               top:
-                Dimensions.get('screen').height -
+                Dimensions.get('window').height -
                 (this.state.heightDimension || 0) -
                 15,
             },
@@ -89,20 +82,17 @@ class ToastManager extends Component {
             });
           }}
         >
-          <Container>
-            <HeaderText>{this.state.notificationData?.header}</HeaderText>
-            <BodyText>{this.state.notificationData?.text}</BodyText>
-            {this.state.notificationData?.button && (
-              <Button
-                onPress={() => {
-                  console.log('button clicked');
-                  // redirect to notificationData.url
-                }}
-              >
-                <ButtonText>{this.state.notificationData.button}</ButtonText>
-              </Button>
-            )}
-          </Container>
+          {notificationCount > 1 ? (
+            <ManyNotificationsToast
+              notificationCount={notificationCount}
+              otherData={otherData}
+            />
+          ) : (
+            <ToastNotification
+              notificationData={notificationData}
+              otherData={otherData}
+            />
+          )}
         </View>
       );
     }

@@ -31,6 +31,6 @@ export default function NotificationContainer({}) {
 
 const styles = StyleSheet.create({
   container: {
-    width: Dimensions.get('screen').width,
+    width: Dimensions.get('window').width,
   },
 });

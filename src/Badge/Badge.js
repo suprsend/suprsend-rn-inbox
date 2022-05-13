@@ -1,6 +1,24 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { InboxContext } from '../index';
 import styled from '@emotion/native';
 import { HelperText } from '../utils/styles';
+
+export default function Badge({ badgeComponent, ...otherProps }) {
+  const { unread: count } = useContext(InboxContext);
+
+  if (count > 0) {
+    if (badgeComponent) {
+      const BadgeComponent = badgeComponent;
+      return <BadgeComponent count={count} {...otherProps} />;
+    }
+    return (
+      <Container>
+        <CountText>{count}</CountText>
+      </Container>
+    );
+  }
+  return null;
+}
 
 const Container = styled.View`
   position: absolute;
@@ -17,18 +35,3 @@ const CountText = styled(HelperText)`
   color: #fff;
   line-height: 12px;
 `;
-
-export default function Badge({ count, badgeComponent, ...otherProps }) {
-  if (count > 0) {
-    if (badgeComponent) {
-      const BadgeComponent = badgeComponent;
-      return <BadgeComponent count={count} {...otherProps} />;
-    }
-    return (
-      <Container>
-        <CountText>{count}</CountText>
-      </Container>
-    );
-  }
-  return null;
-}

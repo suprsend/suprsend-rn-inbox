@@ -147,6 +147,8 @@
   "dependencies": {
     "@emotion/native": "^11.0.0",
     "@emotion/react": "^11.9.0",
+    "@react-native-async-storage/async-storage": "^1.17.4",
+    "dayjs": "^1.11.2",
     "react-native-popper": "^0.3.2",
     "react-native-responsive-fontsize": "^0.5.1"
   }

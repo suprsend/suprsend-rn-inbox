@@ -6,6 +6,46 @@ import {
   HelperText,
   ColorConfig,
 } from '../utils/styles';
+import dayjs from 'dayjs';
+import calendar from 'dayjs/plugin/calendar';
+
+dayjs.extend(calendar);
+
+export default function Notification({
+  notificationData: { message, seen_on: seenOn, created_on: createdOn },
+}) {
+  return (
+    <Container>
+      <InnerView>
+        <TopView>
+          <HeaderText> {message.header}</HeaderText>
+          <BodyText> {message.text}</BodyText>
+          {message.button && (
+            <Button
+              onPress={() => {
+                console.log('button clicked');
+                // redirect to message.url
+              }}
+            >
+              <ButtonText>{message.button}</ButtonText>
+            </Button>
+          )}
+        </TopView>
+        <BottomView>{!seenOn ? <Dot /> : null}</BottomView>
+      </InnerView>
+      <HelperText>
+        {dayjs(createdOn).calendar(null, {
+          sameDay: '[Today at] h:mm A',
+          nextDay: '[Tomorrow at] h:mm A',
+          nextWeek: 'dddd [at] h:mm A',
+          lastDay: '[Yesterday at] h:mm A',
+          lastWeek: '[Last] dddd [at] h:mm A',
+          sameElse: 'DD/MM/YYYY [at] h:mm A',
+        })}
+      </HelperText>
+    </Container>
+  );
+}
 
 const Container = styled.View`
   padding: 7px 14px;
@@ -59,28 +99,3 @@ const Dot = styled.View`
   margin-left: 10px;
   border-radius: 50px;
 `;
-
-export default function Notification({ notificationData, isRead = false }) {
-  return (
-    <Container>
-      <InnerView>
-        <TopView>
-          <HeaderText> {notificationData.header}</HeaderText>
-          <BodyText> {notificationData.text}</BodyText>
-          {notificationData.button && (
-            <Button
-              onPress={() => {
-                console.log('button clicked');
-                // redirect to notificationData.url
-              }}
-            >
-              <ButtonText>{notificationData.button}</ButtonText>
-            </Button>
-          )}
-        </TopView>
-        <BottomView>{!isRead ? <Dot /> : null}</BottomView>
-      </InnerView>
-      <HelperText>Yesterday at 2:35pm</HelperText>
-    </Container>
-  );
-}

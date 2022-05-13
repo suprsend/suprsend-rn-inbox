@@ -8,7 +8,11 @@ export default function App() {
     <View>
       <Toast ref={myRef} />
       <View style={{ marginTop: 50 }}>
-        <Inbox notify={myRef} />
+        <Inbox
+          notify={myRef}
+          distinctId="katta.sivaram@suprsend.com"
+          workspaceKey="123456"
+        />
       </View>
     </View>
   );
