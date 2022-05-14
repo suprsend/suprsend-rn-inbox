@@ -27,8 +27,8 @@ export default function Badge({
 const Container = styled.View`
   position: absolute;
   top: 0px;
-  right: 2px;
-  padding: 2px 6px;
+  left: 10px;
+  padding: 3px;
   background-color: red;
   border-radius: 50px;
   z-index: 999;

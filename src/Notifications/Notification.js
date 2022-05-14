@@ -10,7 +10,7 @@ import dayjs from 'dayjs';
 import calendar from 'dayjs/plugin/calendar';
 import { InboxContext } from '../index';
 import { markSeen } from '../utils/api';
-import { uuid, epochMilliseconds } from '../utils';
+import { uuid, epochMilliseconds, OpenButtonURL } from '../utils';
 
 dayjs.extend(calendar);
 
@@ -29,6 +29,17 @@ export default function Notification({ notificationData }) {
     created_on: createdOn,
     n_id,
   } = notificationData;
+
+  const navigateUser = () => {
+    // redirect after mark seen logic
+    if (typeof buttonClickHandler === 'function') {
+      buttonClickHandler(notificationData);
+    } else {
+      if (notificationData?.message?.url) {
+        OpenButtonURL(notificationData.message.url);
+      }
+    }
+  };
 
   const handleClick = () => {
     if (!seenOn) {
@@ -58,14 +69,10 @@ export default function Notification({ notificationData }) {
           console.log('MARK SEEN ERROR ', err);
         })
         .finally(() => {
-          // redirect after mark seen logic
-          if (
-            typeof buttonClickHandler === 'function' &&
-            notificationData?.message?.url
-          ) {
-            buttonClickHandler(notificationData);
-          }
+          navigateUser();
         });
+    } else {
+      navigateUser();
     }
   };
 

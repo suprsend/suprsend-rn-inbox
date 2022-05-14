@@ -1,67 +1,66 @@
 import React from 'react';
 import styled from '@emotion/native';
 import { HeadingText, SubHeadingText, ColorConfig } from '../utils/styles';
-import { uuid, epochMilliseconds } from '../utils';
+import { uuid, epochMilliseconds, OpenButtonURL } from '../utils';
 import { markSeen } from '../utils/api';
 
 export function ToastNotification({ notificationData, otherData }) {
   const { message, seen_on: seenOn, n_id } = notificationData;
 
-  return (
-    <Container
-      onPress={() => {
-        if (!seenOn) {
-          const body = {
-            event: '$notification_clicked',
-            env: otherData.workspaceKey,
-            $insert_id: uuid(),
-            $time: epochMilliseconds(),
-            properties: { id: n_id },
-          };
+  const handleClick = (isButtonClick = false) => {
+    if (!seenOn) {
+      const body = {
+        event: '$notification_clicked',
+        env: otherData.workspaceKey,
+        $insert_id: uuid(),
+        $time: epochMilliseconds(),
+        properties: { id: n_id },
+      };
 
-          markSeen(otherData.workspaceKey, body)
-            .then((res) => res.json())
-            .then((json) => {
-              console.log('RESPONSE', json);
-              for (const notification of otherData.storeNotificationData
-                .notifications) {
-                if (notification.n_id === n_id) {
-                  notification.seen_on = Date.now();
-                }
+      markSeen(otherData.workspaceKey, body)
+        .then((res) => {
+          if (res.status === 202) {
+            for (const notification of otherData.storeNotificationData
+              .notifications) {
+              if (notification.n_id === n_id) {
+                notification.seen_on = Date.now();
               }
-              otherData.setNotificationData({
-                unread: otherData.storeNotificationData.unread - 1,
-                notifications: otherData.storeNotificationData.notifications,
-                last_fetched: otherData.storeNotificationData.last_fetched,
-              });
-              otherData.notify.current.close(true);
-            })
-            .catch((err) => {
-              console.log('ERROR', err);
-              // -------------------- //
-              // for (const notification of otherData.storeNotificationData
-              //   .notifications) {
-              //   if (notification.n_id === n_id) {
-              //     notification.seen_on = Date.now();
-              //   }
-              // }
-              // otherData.setNotificationData({
-              //   unread: otherData.storeNotificationData.unread - 1,
-              //   notifications: otherData.storeNotificationData.notifications,
-              //   last_fetched: otherData.storeNotificationData.last_fetched,
-              // });
-              // --------------------- //
+            }
+            otherData.setNotificationData({
+              unread: otherData.storeNotificationData.unread - 1,
+              notifications: otherData.storeNotificationData.notifications,
+              last_fetched: otherData.storeNotificationData.last_fetched,
             });
-        }
-      }}
-    >
+            if (!isButtonClick) {
+              otherData.notify.current.close(true);
+            }
+          }
+        })
+        .catch((err) => {
+          console.log('ERROR', err);
+        })
+        .finally(() => {
+          if (isButtonClick) {
+            if (typeof otherData.buttonClickHandler === 'function') {
+              otherData.buttonClickHandler(notificationData);
+            } else {
+              if (notificationData?.message?.url) {
+                OpenButtonURL(notificationData.message.url);
+              }
+            }
+          }
+        });
+    }
+  };
+
+  return (
+    <Container onPress={() => handleClick()}>
       <HeaderText>{message.header}</HeaderText>
       <BodyText>{message.text}</BodyText>
       {message.button && (
         <Button
           onPress={() => {
-            console.log('button clicked');
-            // redirect to notificationData.url
+            handleClick(true);
           }}
         >
           <ButtonText>{message.button}</ButtonText>

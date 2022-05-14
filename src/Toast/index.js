@@ -22,6 +22,7 @@ class ToastManager extends Component {
     setNotificationData,
     notify,
     toggleOpen,
+    buttonClickHandler,
   }) {
     this.setState({
       isShow: true,
@@ -34,6 +35,7 @@ class ToastManager extends Component {
         storeNotificationData,
         notify,
         toggleOpen,
+        buttonClickHandler,
       },
     });
     this.isShow = true;

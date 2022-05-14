@@ -19,6 +19,7 @@ function processNotificationData({
   currentFetchingOn,
   notify,
   toggleOpen,
+  buttonClickHandler,
 }) {
   let newNotifications;
   const storageObject = {
@@ -26,10 +27,7 @@ function processNotificationData({
   };
 
   if (response.results.length > config.BATCH_SIZE) {
-    storageObject.notifications = response.results.slice(
-      0,
-      config.BATCH_SIZE + 1
-    );
+    storageObject.notifications = response.results.slice(0, config.BATCH_SIZE);
     storageObject.unread = config.BATCH_SIZE;
     newNotifications = storageObject.notifications;
   } else {
@@ -48,7 +46,7 @@ function processNotificationData({
     // remove dupicates and get first 25 notifications
     const formattedNotifications = allNotifications
       .filter((v, i, a) => a.findIndex((v2) => v2.n_id === v.n_id) === i)
-      .slice(0, config.BATCH_SIZE + 1);
+      .slice(0, config.BATCH_SIZE);
 
     // get count of unread notificationst
     const unread = formattedNotifications.reduce(
@@ -70,13 +68,21 @@ function processNotificationData({
       distinctId,
       notify,
       toggleOpen,
+      buttonClickHandler,
     });
   }
   setNotificationData(storageObject);
 }
 
 function getNotificationsApi(
-  { distinctId, workspaceKey, setNotificationData, notify, toggleOpen },
+  {
+    distinctId,
+    workspaceKey,
+    setNotificationData,
+    notify,
+    toggleOpen,
+    buttonClickHandler,
+  },
   dataRef
 ) {
   const notificationData = dataRef.current;
@@ -94,6 +100,7 @@ function getNotificationsApi(
         currentFetchingOn,
         notify,
         toggleOpen,
+        buttonClickHandler,
       });
     })
     .catch((err) => {
@@ -132,6 +139,7 @@ export default function SuprsendInbox({
       setNotificationData,
       notify,
       toggleOpen,
+      buttonClickHandler,
     };
     setTimeout(() => {
       getNotificationsApi(props, dataRef);
@@ -204,7 +212,7 @@ const Container = styled.View`
 const MainIcon = styled.TouchableOpacity`
   position: relative;
   padding: 10px 10px 0px 0px;
-  width: 30px;
+  align-self: flex-start;
 `;
 
 const styles = StyleSheet.create({

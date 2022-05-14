@@ -1,3 +1,5 @@
+import { Linking } from 'react-native';
+
 export function uuid() {
   var dt = new Date().getTime();
   var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
@@ -13,4 +15,14 @@ export function uuid() {
 
 export function epochMilliseconds() {
   return Math.round(Date.now());
+}
+
+export function OpenButtonURL(url) {
+  Linking.canOpenURL(url).then((supported) => {
+    if (supported) {
+      Linking.openURL(url);
+    } else {
+      console.log("Don't know how to open URI: " + url);
+    }
+  });
 }
