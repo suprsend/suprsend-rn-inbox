@@ -13,7 +13,7 @@ export function getNotifications({ distinctId, workspaceKey, after = 0 }) {
 }
 
 export function markSeen(workspaceKey, body) {
-  return fetch(`${config.API_BASE_URL}/event/`, {
+  return fetch(`${config.CLICK_API_BASE_URL}/event/`, {
     method: 'POST',
     body: JSON.stringify(body),
     headers: {

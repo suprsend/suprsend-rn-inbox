@@ -11,7 +11,10 @@ export default function App() {
         <Inbox
           notify={myRef}
           distinctId="katta.sivaram@suprsend.com"
-          workspaceKey="123456"
+          workspaceKey="kfWdrPL1nFqs7OUihiBn"
+          // buttonClickHandler={(notificationData) => {
+          //   console.log('clicked me', notificationData);
+          // }}
         />
       </View>
     </View>

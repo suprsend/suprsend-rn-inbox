@@ -18,10 +18,15 @@ const HeaderContainer = styled.View`
   border-bottom-color: #f0f0f0;
 `;
 
-export default function Header() {
+export default function Header({
+  style = {
+    containerStyle: {},
+    textStyle: {},
+  },
+}) {
   return (
-    <HeaderContainer>
-      <HeadingText>Notifications</HeadingText>
+    <HeaderContainer style={style.containerStyle}>
+      <HeadingText style={style.textStyle}>Notifications</HeadingText>
     </HeaderContainer>
   );
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from '@emotion/native';
 import {
   HeadingText,
@@ -8,12 +8,67 @@ import {
 } from '../utils/styles';
 import dayjs from 'dayjs';
 import calendar from 'dayjs/plugin/calendar';
+import { InboxContext } from '../index';
+import { markSeen } from '../utils/api';
+import { uuid, epochMilliseconds } from '../utils';
 
 dayjs.extend(calendar);
 
-export default function Notification({
-  notificationData: { message, seen_on: seenOn, created_on: createdOn },
-}) {
+export default function Notification({ notificationData }) {
+  const {
+    workspaceKey,
+    setNotificationData,
+    notifications,
+    notificationData: storeData,
+    buttonClickHandler,
+  } = useContext(InboxContext);
+
+  const {
+    message,
+    seen_on: seenOn,
+    created_on: createdOn,
+    n_id,
+  } = notificationData;
+
+  const handleClick = () => {
+    if (!seenOn) {
+      const body = {
+        event: '$notification_clicked',
+        env: workspaceKey,
+        $insert_id: uuid(),
+        $time: epochMilliseconds(),
+        properties: { id: n_id },
+      };
+      markSeen(workspaceKey, body)
+        .then((res) => {
+          if (res.status === 202) {
+            for (const notification of notifications) {
+              if (notification.n_id === n_id) {
+                notification.seen_on = Date.now();
+              }
+            }
+            setNotificationData({
+              unread: storeData.unread - 1,
+              notifications,
+              last_fetched: storeData.last_fetched,
+            });
+          }
+        })
+        .catch((err) => {
+          console.log('MARK SEEN ERROR ', err);
+        })
+        .finally(() => {
+          // redirect after mark seen logic
+          if (
+            typeof buttonClickHandler === 'function' &&
+            notificationData?.message?.url
+          ) {
+            buttonClickHandler(notificationData);
+          }
+        });
+    }
+  };
+
   return (
     <Container>
       <InnerView>
@@ -21,12 +76,7 @@ export default function Notification({
           <HeaderText> {message.header}</HeaderText>
           <BodyText> {message.text}</BodyText>
           {message.button && (
-            <Button
-              onPress={() => {
-                console.log('button clicked');
-                // redirect to message.url
-              }}
-            >
+            <Button onPress={handleClick}>
               <ButtonText>{message.button}</ButtonText>
             </Button>
           )}

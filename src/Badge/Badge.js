@@ -3,7 +3,11 @@ import { InboxContext } from '../index';
 import styled from '@emotion/native';
 import { HelperText } from '../utils/styles';
 
-export default function Badge({ badgeComponent, ...otherProps }) {
+export default function Badge({
+  style = { containerStyle: {}, textStyle: {} },
+  badgeComponent,
+  ...otherProps
+}) {
   const { unread: count } = useContext(InboxContext);
 
   if (count > 0) {
@@ -12,8 +16,8 @@ export default function Badge({ badgeComponent, ...otherProps }) {
       return <BadgeComponent count={count} {...otherProps} />;
     }
     return (
-      <Container>
-        <CountText>{count}</CountText>
+      <Container style={style.containerStyle}>
+        <CountText style={style.textStyle}>{count}</CountText>
       </Container>
     );
   }

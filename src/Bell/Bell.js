@@ -1,16 +1,19 @@
 import React from 'react';
-import { Image, StyleSheet } from 'react-native';
+import styled from '@emotion/native';
 
-function Bell({ bellComponent, ...otherProps }) {
+function Bell({ style = {}, bellComponent, ...otherProps }) {
   if (bellComponent) {
     const BellComponent = bellComponent;
     return <BellComponent {...otherProps} />;
   }
   return (
-    <Image source={require('./DefaultBellIcon.png')} style={styles.icon} />
+    <DefaultImage source={require('./DefaultBellIcon.png')} style={style} />
   );
 }
 
-const styles = StyleSheet.create({ icon: { height: 20, width: 20 } });
+const DefaultImage = styled.Image`
+  height: 20px;
+  width: 20px;
+`;
 
 export default Bell;

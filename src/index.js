@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from 'react';
+import React, { useState, createContext, useEffect, useRef } from 'react';
 import { StyleSheet } from 'react-native';
 import styled from '@emotion/native';
 import { Popover } from 'react-native-popper';
@@ -9,61 +9,6 @@ export { default as Toast } from './Toast';
 import config from './config';
 import { getNotifications } from './utils/api';
 import useAsyncStorage from './utils/useAsyncStorage';
-
-const count = 5;
-
-const mockData = {
-  unread: 10,
-  results: [
-    {
-      created_on: 1343105158102,
-      n_category: 'transactional',
-      n_id: 'dsdskjdk',
-      message: {
-        header: 'Welcome to SuprSend',
-        text: 'This diwali buy any item above 500rs and get 2000rs cashback only on suprsend',
-      },
-    },
-    {
-      created_on: 1643105158102,
-      n_category: 'transactional',
-      n_id: 'dsdskjl',
-      seen_on: 1643101796876,
-      message: {
-        header: 'Welcome to SuprSend',
-        text: 'This diwali buy any item above 500rs and get 2000rs cashback only on suprsend',
-        image: '',
-        button: 'Click Me',
-        url: '',
-      },
-    },
-    {
-      created_on: 1643105148102,
-      n_category: 'transactional',
-      n_id: 'dsdskjm',
-      message: {
-        header: 'Welcome to SuprSend',
-        text: 'This diwali buy any item above 500rs and get 2000rs cashback only on suprsend',
-        image: '',
-        button: 'Click Me',
-        url: '',
-      },
-    },
-    {
-      created_on: 1643105198102,
-      n_category: 'transactional',
-      n_id: 'dsdskjln',
-      seen_on: 1643101796876,
-      message: {
-        header: 'Welcome to SuprSend',
-        text: 'This diwali buy any item above 500rs and get 2000rs cashback only on suprsend',
-        image: '',
-        button: 'Click Me',
-        url: '',
-      },
-    },
-  ],
-};
 
 function processNotificationData({
   distinctId,
@@ -130,20 +75,16 @@ function processNotificationData({
   setNotificationData(storageObject);
 }
 
-function getNotificationsApi({
-  distinctId,
-  workspaceKey,
-  notificationData,
-  setNotificationData,
-  notify,
-  toggleOpen,
-}) {
+function getNotificationsApi(
+  { distinctId, workspaceKey, setNotificationData, notify, toggleOpen },
+  dataRef
+) {
+  const notificationData = dataRef.current;
   const after = notificationData.last_fetched;
   const currentFetchingOn = Date.now();
   getNotifications({ distinctId, workspaceKey, after })
     .then((res) => res.json())
     .then((response) => {
-      console.log('RESPONSE', response);
       processNotificationData({
         distinctId,
         workspaceKey,
@@ -156,20 +97,7 @@ function getNotificationsApi({
       });
     })
     .catch((err) => {
-      console.log('ERROR', err);
-      // ----------------------- //
-      // const response = mockData;
-      // processNotificationData({
-      //   distinctId,
-      //   workspaceKey,
-      //   response,
-      //   notificationData,
-      //   setNotificationData,
-      //   currentFetchingOn,
-      //   notify,
-      //   toggleOpen,
-      // });
-      // ----------------------- //
+      console.log('GET INBOX ERROR', err);
     });
 }
 
@@ -180,6 +108,10 @@ export default function SuprsendInbox({
   distinctId = '',
   children,
   notify,
+  bellProps,
+  badgeProps,
+  headerProps,
+  buttonClickHandler,
 }) {
   const [isOpen, toggleOpen] = useState(false);
   const [notificationData, setNotificationData] = useAsyncStorage(
@@ -190,6 +122,7 @@ export default function SuprsendInbox({
       last_fetched: Date.now() - 30 * 24 * 60 * 60 * 1000,
     }
   );
+  const dataRef = useRef(notificationData);
 
   useEffect(() => {
     const props = {
@@ -200,11 +133,17 @@ export default function SuprsendInbox({
       notify,
       toggleOpen,
     };
-    getNotificationsApi(props);
+    setTimeout(() => {
+      getNotificationsApi(props, dataRef);
+    }, 1000);
     setInterval(() => {
-      getNotificationsApi(props);
+      getNotificationsApi(props, dataRef);
     }, config.DELAY);
   }, []);
+
+  useEffect(() => {
+    dataRef.current = notificationData;
+  }, [notificationData, notificationData.notifications]);
 
   const NotificationBox = children ? children : NotificationContainer;
 
@@ -218,6 +157,7 @@ export default function SuprsendInbox({
         setNotificationData,
         notificationData,
         toggleInbox: toggleOpen,
+        buttonClickHandler,
       }}
     >
       <Container>
@@ -232,15 +172,24 @@ export default function SuprsendInbox({
           }}
           trigger={
             <MainIcon activeOpacity={0.7}>
-              <Badge count={count} />
-              <Bell />
+              <Badge {...badgeProps} />
+              <Bell {...bellProps} />
             </MainIcon>
           }
         >
           <Popover.Backdrop />
           <Popover.Content>
-            <Popover.Arrow style={styles.arrow} />
-            <NotificationBox />
+            <Popover.Arrow
+              style={[
+                styles.arrow,
+                {
+                  backgroundColor:
+                    headerProps?.style?.containerStyle?.backgroundColor ||
+                    'white',
+                },
+              ]}
+            />
+            <NotificationBox headerProps={headerProps} />
           </Popover.Content>
         </Popover>
       </Container>

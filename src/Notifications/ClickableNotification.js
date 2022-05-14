@@ -20,37 +20,25 @@ export default function ClickableNotification({ notificationData }) {
         env: workspaceKey,
         $insert_id: uuid(),
         $time: epochMilliseconds(),
-        properties: { id: notificationData.id },
+        properties: { id: notificationData.n_id },
       };
       markSeen(workspaceKey, body)
-        .then((res) => res.json())
-        .then((json) => {
-          console.log('RESPONSE', json);
-          for (const notification of notifications) {
-            if (notification.n_id === notificationData.n_id) {
-              notification.seen_on = Date.now();
+        .then((res) => {
+          if (res.status === 202) {
+            for (const notification of notifications) {
+              if (notification.n_id === notificationData.n_id) {
+                notification.seen_on = Date.now();
+              }
             }
+            setNotificationData({
+              unread: storeData.unread - 1,
+              notifications,
+              last_fetched: storeData.last_fetched,
+            });
           }
-          setNotificationData({
-            unread: storeData.unread - 1,
-            notifications,
-            last_fetched: storeData.last_fetched,
-          });
         })
         .catch((err) => {
-          console.log('ERROR', err);
-          // -------------------- //
-          for (const notification of notifications) {
-            if (notification.n_id === notificationData.n_id) {
-              notification.seen_on = Date.now();
-            }
-          }
-          setNotificationData({
-            unread: storeData.unread - 1,
-            notifications,
-            last_fetched: storeData.last_fetched,
-          });
-          // --------------------- //
+          console.log('MARK SEEN ERROR ', err);
         });
     }
   };

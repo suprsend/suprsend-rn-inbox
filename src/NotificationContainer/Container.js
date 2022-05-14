@@ -20,10 +20,10 @@ const NotificationContainerView = styled.View`
   elevation: 8;
 `;
 
-export default function NotificationContainer({}) {
+export default function NotificationContainer({ headerProps }) {
   return (
     <NotificationContainerView style={styles.container}>
-      <Header />
+      <Header {...headerProps} />
       <NotificationList />
     </NotificationContainerView>
   );
