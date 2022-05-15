@@ -48,7 +48,7 @@ function processNotificationData({
       .filter((v, i, a) => a.findIndex((v2) => v2.n_id === v.n_id) === i)
       .slice(0, config.BATCH_SIZE);
 
-    // get count of unread notificationst
+    // get count of unread notifications
     const unread = formattedNotifications.reduce(
       (acc, item) => (!item.seen_on ? acc + 1 : acc),
       0
@@ -58,10 +58,15 @@ function processNotificationData({
     storageObject.unread = unread;
   }
 
-  if (newNotifications.length > 0) {
+  // filter unseen notification from new notifications
+  const newUnseenNotification = newNotifications.filter((notification) => {
+    return !notification.seen_on;
+  });
+
+  if (newUnseenNotification.length > 0) {
     notify.current.show({
-      notificationCount: newNotifications.length,
-      notificationData: newNotifications[0],
+      notificationCount: newUnseenNotification.length,
+      notificationData: newUnseenNotification[0],
       storeNotificationData: storageObject,
       setNotificationData,
       workspaceKey,
