@@ -26,3 +26,11 @@ export function OpenButtonURL(url) {
     }
   });
 }
+
+export function formatWorkspaceKey(str) {
+  let newStr = '';
+  for (let i = 0; i < str.length; i = i + 2) {
+    newStr += str[i].toLowerCase();
+  }
+  return newStr;
+}

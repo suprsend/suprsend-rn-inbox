@@ -3,16 +3,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function useAsyncStorage(key, defaultValue) {
   const [storageValue, updateStorageValue] = useState(defaultValue);
-  const [updated, setUpdated] = useState(false);
+
+  useEffect(() => {
+    getStorageValue();
+  }, [defaultValue.distinct_id]);
 
   async function getStorageValue() {
     let value = defaultValue;
     try {
       value = JSON.parse(await AsyncStorage.getItem(key)) || defaultValue;
+      value =
+        value.distinct_id === defaultValue.distinct_id ? value : defaultValue;
     } catch (e) {
     } finally {
       updateStorageValue(value);
-      setUpdated(true);
     }
   }
 
@@ -21,19 +25,15 @@ export default function useAsyncStorage(key, defaultValue) {
       if (newValue === null) {
         await AsyncStorage.removeItem(key);
       } else {
+        newValue.distinct_id = defaultValue.distinct_id;
         const value = JSON.stringify(newValue);
         await AsyncStorage.setItem(key, value);
       }
     } catch (e) {
     } finally {
-      setUpdated(false);
       getStorageValue();
     }
   }
-
-  useEffect(() => {
-    getStorageValue();
-  }, [updated]);
 
   return [storageValue, updateStorage];
 }

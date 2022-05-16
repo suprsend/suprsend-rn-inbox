@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from '@emotion/native';
 import {
   HeadingText,
@@ -8,73 +8,11 @@ import {
 } from '../utils/styles';
 import dayjs from 'dayjs';
 import calendar from 'dayjs/plugin/calendar';
-import { InboxContext } from '../index';
-import { markSeen } from '../utils/api';
-import { uuid, epochMilliseconds, OpenButtonURL } from '../utils';
 
 dayjs.extend(calendar);
 
 export default function Notification({ notificationData }) {
-  const {
-    workspaceKey,
-    setNotificationData,
-    notifications,
-    notificationData: storeData,
-    buttonClickHandler,
-  } = useContext(InboxContext);
-
-  const {
-    message,
-    seen_on: seenOn,
-    created_on: createdOn,
-    n_id,
-  } = notificationData;
-
-  const navigateUser = () => {
-    // redirect after mark seen logic
-    if (typeof buttonClickHandler === 'function') {
-      buttonClickHandler(notificationData);
-    } else {
-      if (notificationData?.message?.url) {
-        OpenButtonURL(notificationData.message.url);
-      }
-    }
-  };
-
-  const handleClick = () => {
-    if (!seenOn) {
-      const body = {
-        event: '$notification_clicked',
-        env: workspaceKey,
-        $insert_id: uuid(),
-        $time: epochMilliseconds(),
-        properties: { id: n_id },
-      };
-      markSeen(workspaceKey, body)
-        .then((res) => {
-          if (res.status === 202) {
-            for (const notification of notifications) {
-              if (notification.n_id === n_id) {
-                notification.seen_on = Date.now();
-              }
-            }
-            setNotificationData({
-              unread: storeData.unread - 1,
-              notifications,
-              last_fetched: storeData.last_fetched,
-            });
-          }
-        })
-        .catch((err) => {
-          console.log('MARK SEEN ERROR ', err);
-        })
-        .finally(() => {
-          navigateUser();
-        });
-    } else {
-      navigateUser();
-    }
-  };
+  const { message, seen_on: seenOn, created_on: createdOn } = notificationData;
 
   return (
     <Container>
@@ -82,13 +20,8 @@ export default function Notification({ notificationData }) {
         <TopView>
           <HeaderText> {message.header}</HeaderText>
           <BodyText> {message.text}</BodyText>
-          {message.button && (
-            <Button onPress={handleClick}>
-              <ButtonText>{message.button}</ButtonText>
-            </Button>
-          )}
         </TopView>
-        <BottomView>{!seenOn ? <Dot /> : null}</BottomView>
+        <BottomView>{!seenOn && <Dot />}</BottomView>
       </InnerView>
       <HelperText>
         {dayjs(createdOn).calendar(null, {
@@ -128,19 +61,6 @@ const HeaderText = styled(HeadingText)`
 
 const BodyText = styled(SubHeadingText)`
   margin: 5px 0px;
-`;
-
-const Button = styled.TouchableOpacity`
-  background-color: ${ColorConfig.secondary};
-  border-radius: 5px;
-  margin: 10px 0px;
-  padding: 2px 0px;
-`;
-
-const ButtonText = styled(SubHeadingText)`
-  color: ${ColorConfig.white};
-  padding: 1px 0px;
-  text-align: center;
 `;
 
 const BottomView = styled.View`

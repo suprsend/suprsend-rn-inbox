@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { Button, View } from 'react-native';
 import Inbox, { Toast } from '@suprsend/rn-inbox';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
   const myRef = React.useRef();
@@ -17,6 +18,12 @@ export default function App() {
           // }}
         />
       </View>
+      <Button
+        title="clear storage"
+        onPress={() => {
+          AsyncStorage.removeItem('_suprsend_inbox_kwrlnq7uhb');
+        }}
+      />
     </View>
   );
 }

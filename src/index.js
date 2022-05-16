@@ -9,6 +9,7 @@ export { default as Toast } from './Toast';
 import config from './config';
 import { getNotifications } from './utils/api';
 import useAsyncStorage from './utils/useAsyncStorage';
+import { formatWorkspaceKey } from './utils';
 
 function processNotificationData({
   distinctId,
@@ -125,12 +126,14 @@ export default function SuprsendInbox({
   headerProps,
   buttonClickHandler,
 }) {
+  const formattedWorkspaceKey = formatWorkspaceKey(workspaceKey);
   const [isOpen, toggleOpen] = useState(false);
   const [notificationData, setNotificationData] = useAsyncStorage(
-    '_suprsend_inbox',
+    `_suprsend_inbox_${formattedWorkspaceKey}`,
     {
       notifications: [],
       unread: 0,
+      distinct_id: distinctId,
       last_fetched: Date.now() - 30 * 24 * 60 * 60 * 1000,
     }
   );
@@ -146,13 +149,17 @@ export default function SuprsendInbox({
       toggleOpen,
       buttonClickHandler,
     };
-    setTimeout(() => {
+    let timer1 = setTimeout(() => {
       getNotificationsApi(props, dataRef);
     }, 1000);
-    setInterval(() => {
+    let timer2 = setInterval(() => {
       getNotificationsApi(props, dataRef);
     }, config.DELAY);
-  }, []);
+    return () => {
+      clearInterval(timer1);
+      clearInterval(timer2);
+    };
+  }, [distinctId, workspaceKey]);
 
   useEffect(() => {
     dataRef.current = notificationData;
@@ -231,7 +238,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.6,
     shadowRadius: 0.1,
-    elevation: 8,
     zIndex: 10,
     borderTopWidth: 1,
     borderTopColor: '#f0f0f0',

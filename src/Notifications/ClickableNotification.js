@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import styled from '@emotion/native';
 import Notification from './Notification';
 import { markSeen } from '../utils/api';
-import { uuid, epochMilliseconds } from '../utils';
+import { uuid, epochMilliseconds, OpenButtonURL } from '../utils';
 import { InboxContext } from '../index';
 
 export default function ClickableNotification({ notificationData }) {
@@ -11,7 +11,19 @@ export default function ClickableNotification({ notificationData }) {
     setNotificationData,
     notifications,
     notificationData: storeData,
+    buttonClickHandler,
   } = useContext(InboxContext);
+
+  const navigateUser = () => {
+    // redirect after mark seen logic
+    if (typeof buttonClickHandler === 'function') {
+      buttonClickHandler(notificationData);
+    } else {
+      if (notificationData?.message?.url) {
+        OpenButtonURL(notificationData.message.url);
+      }
+    }
+  };
 
   const handleClick = () => {
     if (!notificationData.seen_on) {
@@ -39,7 +51,12 @@ export default function ClickableNotification({ notificationData }) {
         })
         .catch((err) => {
           console.log('MARK SEEN ERROR ', err);
+        })
+        .finally(() => {
+          navigateUser();
         });
+    } else {
+      navigateUser();
     }
   };
 
